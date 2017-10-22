@@ -36,7 +36,6 @@ function makeChanges(compiledVals) {
           if (compiledVals.indexOf("color-brightness")) {
             el[i].style.backgroundColor = 'white';
             el[i].style.color = 'black';
-            console.log("HI")
           };
 
         }
@@ -186,10 +185,10 @@ function readAllValues() {
 function request() {
   var websiteUrl = $("a[href^='http']").eq(0).attr("href");
   var imageUrls = [];
-  var text = [];
+  var paragraphs = [];
   var videos = [];
   // Collect src attributes from image tags.
-  $("img[src^='http").each(function() {
+  $("img").each(function() {
     var imgsrc = this.src;
     imageUrls.push(imgsrc);
   });
@@ -202,7 +201,7 @@ function request() {
     }).each(function() {
     var body = $(this).text();
     if(body.length > 500) {
-      text.push(body);
+      paragraphs.push(body);
     }
   });
 
@@ -220,13 +219,36 @@ function request() {
   });
 
   //TODO: Make HTTP Request
-  var requestJSON = {"website": websiteUrl, "images": imageUrls, "text": text};
+  var requestJSON = {"website": websiteUrl, "images": imageUrls, "text": paragraphs};
   console.log(requestJSON);
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() {
     // Implemented elsewhere.
     if (xhr.readyState == 4) {
       console.log(xhr.responseText)
+
+      // Inject text back in to the DOM
+      var ourJson = JSON.parse(xhr.responseText);
+
+      var texts = ourJson["summaries"];
+      var index = 0;
+      // Collect bodies of text longer than 500 characters.
+      console.log(texts);
+      $( "p" )
+        .each(function() {
+          $(this).html(texts[index]);
+          index++;
+        });
+
+
+      // Inject alt text in to the DOM
+      var altTexts = ourJson["imageContents"];
+      console.log("alts", altTexts);
+      $("img").each(function(i) {
+        if($(this).prop("alt") === "") {
+          $(this).prop("alt", altTexts[i]);
+        }
+      });
     }
   };
   xhr.open("POST", "http://localhost:4000/v1/accessify", true);
@@ -235,4 +257,3 @@ function request() {
 
 }
 request();
-
