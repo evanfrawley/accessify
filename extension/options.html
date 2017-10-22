@@ -23,8 +23,15 @@
     <!-- <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script> -->
   </head>
+  
   <body>
-    <h1>Accessify</h1>
+<header >
+    <nav class="navbar navbar-light bg-faded ">
+  <a class="navbar-brand" href="#"><img src="../css/logo.svg" alt="Accessify Logo" height="100" width="100">
+</a>
+</nav>
+  </header>
+  <div class ="container">
     <h2>Disability Profiles</h2>
 
     <!-- Introduction -->
@@ -34,10 +41,10 @@ match your needs, continue on to preferences.</p>
   
     <!-- Profile -->
     <form>
-      <div class="btn-group" data-toggle="buttons" id="profile-radio">
-        <label class="btn btn-primary active">
-          <input type="radio" name="profile" value="autism"> Autism <br>
-        </label>
+     
+        <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" id="fonts-readability">
+          Making fonts more readable.
+    </button>
 
         <label class="btn btn-primary">
           <input type="radio" name="profile" value="screen"> Screen Reader User <br>
@@ -58,7 +65,6 @@ match your needs, continue on to preferences.</p>
         <label class="btn btn-primary">
           <input type="radio" name="profile" value="dyslexia"> Dyslexia <br>
         </label>
-      </div>
       <br>
 
       <!-- <h3>Fonts</h3>
@@ -110,6 +116,8 @@ match your needs, continue on to preferences.</p>
     <button type="button" class="btn btn-success" data-toggle="button" aria-pressed="false" autocomplete="off" id="save-btn">
         Save settings.
     </button>
-  
+   
+      </div>
+
   </body>
 </html>
