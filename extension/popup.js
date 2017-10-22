@@ -1,15 +1,14 @@
-var on = 1;
+var on = true;
 chrome.storage.sync.get({
-  "onoff": 1,
+  "onoff": true,
 }, function(items) {
-  document.getElementById('onoff').value = items.onoff;
+  document.getElementById('onoff').checked = items.onoff;
 });
 
-//var on = document.getElementById('onoff').value;
 console.log(on)
 function change() {
-    on = -on;
-    document.getElementById('onoff').textContent = on; 
+    on = !on;
+    document.getElementById('onoff').checked = on; 
     chrome.storage.sync.set({ "onoff" : on }, function() {
      console.log(on);
      if (chrome.runtime.error) {
