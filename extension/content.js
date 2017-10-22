@@ -3,10 +3,15 @@ var on;
 readOn();
 // Read all values into currentConfiguration
 var currentConfiguration = {};
-var compiledVals = []
-readAllValues();
+var compiledVals = [];
+
+var profile_key = "profile";
+var keys = ["fonts-readability", "color-brightness", "linear-layout", "consistent-layout", "enlarge-buttons", "form-space", "summarize"];
 // Make the desired changes to HTML/CSS
-function makeChanges() {
+function makeChanges(compiledVals) {
+  compiledVals = ["fonts-readability", "color-brightness", "linear-layout", "consistent-layout", "enlarge-buttons", "form-space", "summarize"];
+  console.log(compiledVals);
+  console.log(compiledVals.indexOf("fonts-readability"))
   if (on) {
     // HELENA DO YOUR THANG
     console.log('Making changes.');
@@ -17,11 +22,12 @@ function makeChanges() {
     (document.head||document.documentElement).appendChild(style);
 
     function setProperties() {
-      var properties = convertProperties(formArr);
+      
+      //var properties = convertProperties(formArr);
       var el = document.querySelectorAll('*');
       for(var i=0;i<el.length;i++){
 
-        if ((el[i].id != "map") || el[i].tagName == "em")  {
+        if ((el[i].id != "map") || el[i].tagName === "em")  {
           //font
           if (compiledVals.indexOf("fonts-readability")) {
             el[i].style.fontFamily = 'Verdana';
@@ -30,6 +36,7 @@ function makeChanges() {
           if (compiledVals.indexOf("color-brightness")) {
             el[i].style.backgroundColor = 'white';
             el[i].style.color = 'black';
+            console.log("HI")
           };
           
         }
@@ -37,18 +44,18 @@ function makeChanges() {
           //layout
           el[i].style.marginTop = "5px";
         }
-        if ((el[i].tagName == "input" || el[i].class == "UIInput-content") && ( (compiledVals.indexOf("enlarge-buttons")) (compiledVals.indexOf("form-space")) ){ //doesn't work yet!! 
+        if ( ((el[i].tagName == "input") || (el[i].class == "UIInput-content")) && ( (compiledVals.indexOf("enlarge-buttons")) || (compiledVals.indexOf("form-space")) ) ){ //doesn't work yet!! 
           //clickable
           console.log("FORM");
           el[i].style.marginBottom = "5px";
         }
         if ((el[i].id == "question-header") && (compiledVals.indexOf("linear-layout")) ) {
           //layout
-        el[i].style.paddingBottom = "3px";
-          } 
+          el[i].style.paddingBottom = "3px";
+        } 
         if ((el[i].id == "div" || el[i].type == "body" || el[i].tagName == "h1" || el[i].text != null) && el[i].tagName != "img" ) {
           //color
-          if ((compiledVals.indexOf("color-brightness")) || (compiledVals.indexOf("background-color")) ){
+          if (compiledVals.indexOf("color-brightness")) {
             el[i].style.backgroundColor = 'white';
             el[i].style.color = 'black';
           }
@@ -70,7 +77,7 @@ function makeChanges() {
           }
       });
     }
-    setProperties(formArr);
+    setProperties(compiledVals);
 
   // If user does not want page changed.
   } else { 
@@ -90,14 +97,14 @@ chrome.runtime.onMessage.addListener(
 
 // Read if plugin is enabled. 
 function readOn() {
-  chrome.storage.sync.get({
+  chrome.storage.local.get({
     "onoff": true,
   }, function(items) {
     on=items.onoff;
     // Make changes if the app is enabled.
     console.log("reading on as: " + on);
     if(on) {
-      makeChanges();
+      readAllValues();
     }
   });
 }
@@ -119,53 +126,60 @@ function readOn() {
 "summarize" --> "summarize"
 */
 
-function readAllValues() {
-  // Profile is a string, everything else is a boolean.
-  var profile_key = "profile";
-  var keys = ["fonts-readability", "color-brightness", "linear-layout", 
-              "consistent-layout", "enlarge-buttons", "form-space", "summarize"];
-
-  chrome.storage.sync.get({
-    profile_key: "none",
-  }, function(items) {
-    console.log(items.profile_key);
-    currentConfiguration[profile_key] = items.profile_key;
-  });
-
+function continueKeys() {
+  makeChanges()
+  /*
   keys.forEach(function (key) {
-    chrome.storage.sync.get({
-      key: false,
-    }, function(items) {
-      console.log(items.key);
-      currentConfiguration[key] = items.key;
+    var obj = {}
+    obj[key] = true;
+    chrome.storage.sync.get(null, function(items) {
+      console.log("within continued", items[key]);
+      currentConfiguration[key] = items[key];
 
       if(key === "summarize") {
-        if (profile_key == "autism") {
+        //var profile = currentConfiguration[profile_key];
+        console.log("The loaded profile is: " + profile);
+        if (profile === "autism") {
           compiledVals = ["fonts-readability", "color-brightness", "summarize", "linear-layout"];
-        } else if (profile_key == "screen") {
+        } else if (profile === "screen") {
           compiledVals = ["alt", "linear-layout"] ;
-        } else if (profile_key == "vision") {
+        } else if (profile_key === "vision") {
           compiledVals = ["color-brightness", "linear-layout"] ; 
-        } else if (profile_key == "motor") {
+        } else if (profile === "motor") {
           compiledVals = ["enlarge-buttons", "form-space"]; 
-        } else if (profile_key == "hearing") {
+        } else if (profile === "hearing") {
           compiledVals = ["video", "linear-layout"] ; 
-        } else if (profile_key == "dyslexia") {
+        } else if (profile === "dyslexia") {
           compiledVals = ["summarize", "linear-layout", "color-brightness", "fonts-readability"];
         } 
-        for (var k in keys) {
+        console.log(compiledVals);
+
+        keys.forEach(function(k) {
           if (keys[k] == true) {
             compiledVals[compiledVals.length] = k;
           } else {
             if (compiledVals.indexOf(k)) {
-              compiledVals.remove(compiledVals.indexOf(k));
+              compiledVals.splice(compiledVals.indexOf(k), 1);
             }
           }
-        }
+
+        });
         makeChanges(compiledVals)
+
       }
     });
   });
+*/
+}
+
+function readAllValues() {
+  // Profile is a string, everything else is a boolean.
+  chrome.storage.local.get(null, function(items) {
+    currentConfiguration[profile_key] = items[profile_key];
+
+    continueKeys()
+  });
+
 }
 
 
