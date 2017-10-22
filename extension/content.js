@@ -38,13 +38,13 @@ function makeChanges(compiledVals) {
             el[i].style.color = 'black';
             console.log("HI")
           };
-          
+
         }
         if ((el[i].id == "div") && (compiledVals.indexOf("linear-layout")) ) {
           //layout
           el[i].style.marginTop = "5px";
         }
-        if ( ((el[i].tagName == "input") || (el[i].class == "UIInput-content")) && ( (compiledVals.indexOf("enlarge-buttons")) || (compiledVals.indexOf("form-space")) ) ){ //doesn't work yet!! 
+        if ( ((el[i].tagName == "input") || (el[i].class == "UIInput-content")) && ( (compiledVals.indexOf("enlarge-buttons")) || (compiledVals.indexOf("form-space")) ) ){ //doesn't work yet!!
           //clickable
           console.log("FORM");
           el[i].style.marginBottom = "5px";
@@ -52,7 +52,7 @@ function makeChanges(compiledVals) {
         if ((el[i].id == "question-header") && (compiledVals.indexOf("linear-layout")) ) {
           //layout
           el[i].style.paddingBottom = "3px";
-        } 
+        }
         if ((el[i].id == "div" || el[i].type == "body" || el[i].tagName == "h1" || el[i].text != null) && el[i].tagName != "img" ) {
           //color
           if (compiledVals.indexOf("color-brightness")) {
@@ -62,25 +62,25 @@ function makeChanges(compiledVals) {
         }
       }
       $('p').each(function() {
-        //color 
+        //color
 
-          /* text for current paragraph */
-          //this.style.textAlign = 'left';
-          if ($(this).text().length > 1){
+        /* text for current paragraph */
+        //this.style.textAlign = 'left';
+        if ($(this).text().length > 1){
           $(this).css("background-color", "white");
           $(this).css("color", "black");
           $(this).css("line-height", 3);
-          }
-          if ($(this).text().length > 20){
-            // align 
-            $(this).css("text-align", "left");
-          }
+        }
+        if ($(this).text().length > 20){
+          // align
+          $(this).css("text-align", "left");
+        }
       });
     }
     setProperties(compiledVals);
 
-  // If user does not want page changed.
-  } else { 
+    // If user does not want page changed.
+  } else {
     console.log('Not making changes.');
   }
 }
@@ -95,7 +95,7 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
-// Read if plugin is enabled. 
+// Read if plugin is enabled.
 function readOn() {
   chrome.storage.local.get({
     "onoff": true,
@@ -110,11 +110,11 @@ function readOn() {
 }
 
 /*
-"autism" = ["fonts-readability", "color-brightness", "summarize", "linear-layout"]  
-"screen" = ["alt", "linear-layout"]  
-"vision" = ["color-brightness", "linear-layout"] 
-"motor" = ["enlarge-buttons", "form-space"]  
-"hearing" = ["video", "linear-layout"] 
+"autism" = ["fonts-readability", "color-brightness", "summarize", "linear-layout"]
+"screen" = ["alt", "linear-layout"]
+"vision" = ["color-brightness", "linear-layout"]
+"motor" = ["enlarge-buttons", "form-space"]
+"hearing" = ["video", "linear-layout"]
 "dyslexia" = ["summarize", "linear-layout", "color-brightness", "fonts-readability"]
 
 "fonts-readability" --> "fonts"
@@ -182,48 +182,56 @@ function readAllValues() {
 
 }
 
-
 // Collect images, text, video and send request.
 function request() {
-  let websiteUrl = $("a[href^='http']").eq(0).attr("href");
+  var websiteUrl = $("a[href^='http']").eq(0).attr("href");
   var imageUrls = [];
   var text = [];
   var videos = [];
-
-  // Collect src attributes from image tags. 
-  $("img[src^='http").each(function() {  
-   imgsrc = this.src;
-   imageUrls.push(imgsrc);
-  }); 
+  // Collect src attributes from image tags.
+  $("img[src^='http").each(function() {
+    var imgsrc = this.src;
+    imageUrls.push(imgsrc);
+  });
 
   // Collect bodies of text longer than 500 characters.
   $( "p" )
-  .contents()
-  .filter(function(){
-    return this.nodeType !== 1;
-  }).each(function() {  
-   body = $(this).text();
+    .contents()
+    .filter(function(){
+      return this.nodeType !== 1;
+    }).each(function() {
+    var body = $(this).text();
     if(body.length > 500) {
       text.push(body);
     }
-  }); 
+  });
 
   // Collect video links
   $('video').each( function(num,val){
     // console.log($(this).attr('src'));
     console.log("Video tag here!!!");
     // videos.push();
-  }); 
+  });
   // Collect video links
   $('video source').each( function(num,val){
     // console.log($(this).attr('src'));
     console.log("Video tag here!!!");
     // videos.push();
-  }); 
+  });
 
   //TODO: Make HTTP Request
-  let requestJSON = {websiteUrl, imageUrls, text};
+  var requestJSON = {"website": websiteUrl, "images": imageUrls, "text": text};
   console.log(requestJSON);
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    // Implemented elsewhere.
+    if (xhr.readyState == 4) {
+      console.log(xhr.responseText)
+    }
+  };
+  xhr.open("POST", "http://localhost:4000/v1/accessify", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send(JSON.stringify(requestJSON));
 
 }
 request();
