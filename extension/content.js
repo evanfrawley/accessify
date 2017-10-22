@@ -1,6 +1,9 @@
 // content.js
 var on;
 readOn();
+// Read all values into currentConfiguration
+var currentConfiguration = {};
+readAllValues();
 
 // Make the desired changes to HTML/CSS
 function makeChanges() {
@@ -37,7 +40,6 @@ function makeChanges() {
   		    	$(this).css("text-align", "left");
   		    }
   		});
-  	}
   // If user does not want page changed.
   } else { 
     console.log('Not making changes.');
@@ -64,6 +66,29 @@ function readOn() {
     if(on) {
       makeChanges();
     }
+  });
+}
+
+function readAllValues() {
+  // Profile is a string, everything else is a boolean.
+  var profile_key = "profile";
+  var keys = ["fonts-readability", "color-brightness", "linear-layout", 
+              "consistent-layout", "enlarge-buttons", "form-space", "summarize"];
+
+  chrome.storage.sync.get({
+    profile_key: "none",
+  }, function(items) {
+    console.log(items.profile_key);
+    currentConfiguration[profile_key] = items.profile_key;
+  });
+
+  keys.forEach(function (key) {
+    chrome.storage.sync.get({
+      key: false,
+    }, function(items) {
+      console.log(items.key);
+      currentConfiguration[key] = items.key;
+    });
   });
 }
 
@@ -111,3 +136,4 @@ function request() {
 
 }
 request();
+
