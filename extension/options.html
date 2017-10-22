@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Meta -->
+    <meta charset="UTF-8">
+    <title>Accessify</title>
+    <meta name="author" content="Ishan Saksena">
+    <meta name="description" content="Chrome extension to make websites more accessible. ">
+    <meta name="keywords" content="chrome, extension, accessible">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/stylesheet.css" type="text/css">
+    <!-- <link rel="stylesheet" href="js/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css" type="text/css"> -->
+
+    <!-- Javascript -->
+    <script src="js/jquery-3.2.1.js" type="text/javascript"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+    <script src="js/bootstrap-3.3.7-dist/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="js/index.js" type="text/javascript"></script>
+
+    <!-- Bootstrap toggle -->
+    <!-- <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script> -->
+  </head>
+  <body>
+    <h1>Accessify</h1>
+    <h2>Disability Profiles</h2>
+
+    <!-- Introduction -->
+    <p>The profiles below allow for pre-set preferences that were researched to be the best for these disabilities. You can 
+change these preferences after selecting a profile, if they do not match with your needs. If there are no profiles that 
+match your needs, continue on to preferences.</p>
+  
+    <!-- Profile -->
+    <form>
+      <div class="btn-group" data-toggle="buttons" id="profile-radio">
+        <label class="btn btn-primary active">
+          <input type="radio" name="profile" value="autism"> Autism <br>
+        </label>
+
+        <label class="btn btn-primary">
+          <input type="radio" name="profile" value="screen"> Screen Reader User <br>
+        </label>
+
+        <label class="btn btn-primary">
+          <input type="radio" name="profile" value="vision"> Low Vision <br>
+        </label>
+
+        <label class="btn btn-primary">
+          <input type="radio" name="profile" value="motor"> Physical or Motor Disability<br>
+        </label>
+        
+        <label class="btn btn-primary">
+          <input type="radio" name="profile" value="hearing"> Deaf or hard of hearing<br>
+        </label>
+
+        <label class="btn btn-primary">
+          <input type="radio" name="profile" value="dyslexia"> Dyslexia <br>
+        </label>
+      </div>
+      <br>
+
+      <!-- <h3>Fonts</h3>
+       <label>
+        Making fonts more readable.
+        <input type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled" class='pull-right'>
+      </label> -->
+    </form>
+
+    <p>Profiles Selected: None</p>
+
+    <h2>Preferences</h2>
+
+    
+
+    <h3>Fonts</h3>
+    <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" id="fonts-readability">
+          Making fonts more readable.
+    </button>
+
+    <h3>Colors</h3>
+    <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" id="color-brightness">
+        Replacing bright colors with muter versions.
+    </button>
+
+    <h3>Layout</h3>
+    <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" id="linear-layout">
+        Creating a linear layout.
+    </button>
+    <br>
+    <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" id="consistent-layout">
+        Creating a consistent layout.
+    </button>
+
+    <h3>Forms</h3>
+    <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" id="enlarge-buttons">
+        Replacing small buttons with large buttons.
+    </button>
+    <br>
+    <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" id="form-space">
+        Add space between form fields.
+    </button>
+
+    <h3>Languages</h3>
+    <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" id="summarize">
+        Summarizing long bodies of text.
+    </button>
+
+    <br>
+
+    <button type="button" class="btn btn-success" data-toggle="button" aria-pressed="false" autocomplete="off" id="save-btn">
+        Save settings.
+    </button>
+  
+  </body>
+</html>

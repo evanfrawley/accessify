@@ -1,9 +1,12 @@
 var on = true;
-chrome.storage.sync.get({
-  "onoff": true,
-}, function(items) {
-  document.getElementById('onoff').checked = items.onoff;
-});
+readOn();
+function readOn() {
+  chrome.storage.sync.get({
+    "onoff": true,
+  }, function(items) {
+    document.getElementById('onoff').checked = items.onoff;
+  });
+}
 
 console.log(on)
 function change() {
