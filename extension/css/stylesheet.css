@@ -4,6 +4,17 @@
 	margin: 0 auto;
 	 
 }
+
+.buttons {
+	width: 5%;
+}
+
+div {
+	cursor: pointer; cursor: hand;
+}
+
+
+
 body {
 	font-family: Verdana;
 	
@@ -12,7 +23,7 @@ body {
 
 
 h1, h2 {
-	font-weight: bold;
+	color: #FC7125;
 }
 
 
