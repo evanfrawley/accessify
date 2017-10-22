@@ -3,48 +3,81 @@ var on;
 readOn();
 // Read all values into currentConfiguration
 var currentConfiguration = {};
+var compiledVals = []
 readAllValues();
-
 // Make the desired changes to HTML/CSS
 function makeChanges() {
   if (on) {
     // HELENA DO YOUR THANG
     console.log('Making changes.');
-  	var style = document.createElement('link');
-  	style.rel = 'stylesheet';
-  	style.type = 'text/css';
-  	style.href = chrome.extension.getURL('styles.css');
-  	(document.head||document.documentElement).appendChild(style);
+    var style = document.createElement('link');
+    style.rel = 'stylesheet';
+    style.type = 'text/css';
+    style.href = chrome.extension.getURL('styles.css');
+    (document.head||document.documentElement).appendChild(style);
 
-  	var buttons = document.getElementsByTagName('button');
-  	for (var i = 0; i < buttons.length; i++) {
-  	    var button = buttons[i];
-  	    var type = button.getAttribute('type') || 'submit'; // Submit is the default
-  	    // ...
-  	    buttons[i].style.height = "20px";
-  	    buttons[i].style.width = "20px";
-  	}
+    function setProperties() {
+      var properties = convertProperties(formArr);
+      var el = document.querySelectorAll('*');
+      for(var i=0;i<el.length;i++){
 
-  		var el = document.querySelectorAll('*');
-  		for(var i=0;i<el.length;i++){
-  		  el[i].style.fontFamily = 'Verdana';
-  		  el[i].style.color = 'black';
-  		  el[i].style.backgroundColor = 'white';
-  		  el[i].style.paddingTop = "5px";
-  		  //el[i].style.outline = '1px solid grey';		  
-  		}
-  		$('p').each(function() {
-  		    /* text for current paragraph */
-  		    //this.style.textAlign = 'left';
-  		    if ($(this).text().length > 20){
-  		    	$(this).css("text-align", "left");
-  		    }
-  		});
+        if ((el[i].id != "map") || el[i].tagName == "em")  {
+          //font
+          if (compiledVals.indexOf("fonts-readability")) {
+            el[i].style.fontFamily = 'Verdana';
+          };
+          //color
+          if (compiledVals.indexOf("color-brightness")) {
+            el[i].style.backgroundColor = 'white';
+            el[i].style.color = 'black';
+          };
+          
+        }
+        if ((el[i].id == "div") && (compiledVals.indexOf("linear-layout")) ) {
+          //layout
+          el[i].style.marginTop = "5px";
+        }
+        if ((el[i].tagName == "input" || el[i].class == "UIInput-content") && ( (compiledVals.indexOf("enlarge-buttons")) (compiledVals.indexOf("form-space")) ){ //doesn't work yet!! 
+          //clickable
+          console.log("FORM");
+          el[i].style.marginBottom = "5px";
+        }
+        if ((el[i].id == "question-header") && (compiledVals.indexOf("linear-layout")) ) {
+          //layout
+        el[i].style.paddingBottom = "3px";
+          } 
+        if ((el[i].id == "div" || el[i].type == "body" || el[i].tagName == "h1" || el[i].text != null) && el[i].tagName != "img" ) {
+          //color
+          if ((compiledVals.indexOf("color-brightness")) || (compiledVals.indexOf("background-color")) ){
+            el[i].style.backgroundColor = 'white';
+            el[i].style.color = 'black';
+          }
+        }
+      }
+      $('p').each(function() {
+        //color 
+
+          /* text for current paragraph */
+          //this.style.textAlign = 'left';
+          if ($(this).text().length > 1){
+          $(this).css("background-color", "white");
+          $(this).css("color", "black");
+          $(this).css("line-height", 3);
+          }
+          if ($(this).text().length > 20){
+            // align 
+            $(this).css("text-align", "left");
+          }
+      });
+    }
+    setProperties(formArr);
+
   // If user does not want page changed.
   } else { 
     console.log('Not making changes.');
   }
 }
+
 
 // Set up listener for plugin icon.
 chrome.runtime.onMessage.addListener(
@@ -69,6 +102,23 @@ function readOn() {
   });
 }
 
+/*
+"autism" = ["fonts-readability", "color-brightness", "summarize", "linear-layout"]  
+"screen" = ["alt", "linear-layout"]  
+"vision" = ["color-brightness", "linear-layout"] 
+"motor" = ["enlarge-buttons", "form-space"]  
+"hearing" = ["video", "linear-layout"] 
+"dyslexia" = ["summarize", "linear-layout", "color-brightness", "fonts-readability"]
+
+"fonts-readability" --> "fonts"
+"color-brightness" --> "colors"
+
+"linear-layout" --> "layout" //differientiate later lol
+"consistent-layout" --> "layout"
+
+"summarize" --> "summarize"
+*/
+
 function readAllValues() {
   // Profile is a string, everything else is a boolean.
   var profile_key = "profile";
@@ -88,9 +138,36 @@ function readAllValues() {
     }, function(items) {
       console.log(items.key);
       currentConfiguration[key] = items.key;
+
+      if(key === "summarize") {
+        if (profile_key == "autism") {
+          compiledVals = ["fonts-readability", "color-brightness", "summarize", "linear-layout"];
+        } else if (profile_key == "screen") {
+          compiledVals = ["alt", "linear-layout"] ;
+        } else if (profile_key == "vision") {
+          compiledVals = ["color-brightness", "linear-layout"] ; 
+        } else if (profile_key == "motor") {
+          compiledVals = ["enlarge-buttons", "form-space"]; 
+        } else if (profile_key == "hearing") {
+          compiledVals = ["video", "linear-layout"] ; 
+        } else if (profile_key == "dyslexia") {
+          compiledVals = ["summarize", "linear-layout", "color-brightness", "fonts-readability"];
+        } 
+        for (var k in keys) {
+          if (keys[k] == true) {
+            compiledVals[compiledVals.length] = k;
+          } else {
+            if (compiledVals.indexOf(k)) {
+              compiledVals.remove(compiledVals.indexOf(k));
+            }
+          }
+        }
+        makeChanges(compiledVals)
+      }
     });
   });
 }
+
 
 // Collect images, text, video and send request.
 function request() {
