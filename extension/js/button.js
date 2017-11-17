@@ -91,13 +91,6 @@ $(document).ready(function(){
 
 $(document).ready(function(){
     $('#language').click(function(){
-    $('#language1').attr('src', '../css/webo.png');
-
-});
-    })
-
-$(document).ready(function(){
-    $('#language').click(function(){
     $('#language1').attr('src', '../css/sumo.png');
 
 });
